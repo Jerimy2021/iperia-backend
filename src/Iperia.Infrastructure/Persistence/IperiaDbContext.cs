@@ -1,3 +1,4 @@
+using Iperia.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace Iperia.Infrastructure.Persistence;
@@ -7,6 +8,8 @@ public class IperiaDbContext : DbContext
     public IperiaDbContext(DbContextOptions<IperiaDbContext> options) : base(options)
     {
     }
+
+    public DbSet<User> Users => Set<User>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
