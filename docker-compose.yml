@@ -1,0 +1,22 @@
+# Base de datos de desarrollo local. Levantar con: docker compose up -d
+# Usa el puerto 5434 para no chocar con un PostgreSQL instalado en el equipo (5432) ni con otros contenedores (5433).
+services:
+  postgres:
+    image: postgres:17
+    container_name: iperia-postgres
+    environment:
+      POSTGRES_DB: iperia
+      POSTGRES_USER: iperia
+      POSTGRES_PASSWORD: iperia_dev
+    ports:
+      - "5434:5432"
+    volumes:
+      - iperia-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U iperia -d iperia"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  iperia-pgdata:
