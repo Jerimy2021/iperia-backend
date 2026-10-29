@@ -55,6 +55,29 @@ dotnet user-secrets set "ConnectionStrings:IperiaDb" "Host=localhost;Port=5432;D
 
 Password: 8 a 72 caracteres, con mayúsculas, minúsculas y números.
 
+## Roles y permisos
+
+Roles: `Admin`, `Supervisor`, `Worker` (por defecto al registrarse).
+
+| Método | Ruta | Acceso | Descripción |
+|---|---|---|---|
+| GET | `/api/users` | Admin, Supervisor | Lista los usuarios |
+| PATCH | `/api/users/{id}/role` | Admin | `{ role }` → cambia el rol (un Admin no puede cambiar su propio rol) |
+
+Sin token → **401**. Con token pero sin el rol necesario → **403**.
+
+Para proteger un endpoint nuevo se usan las políticas de `src/Iperia.Api/Authentication/Policies.cs`:
+
+```csharp
+[Authorize(Policy = Policies.AdminOnly)]          // solo Admin
+[Authorize(Policy = Policies.AdminOrSupervisor)]  // Admin o Supervisor
+[Authorize]                                       // cualquier usuario autenticado
+```
+
+El rol viaja dentro del token: después de cambiar el rol de alguien, esa persona debe volver a iniciar sesión.
+
+**Admin inicial (desarrollo):** al arrancar en `Development` se crea `admin@iperia.local` / `Admin12345` (sección `SeedAdmin` de `appsettings.Development.json`) si todavía no existe.
+
 ## Postman
 
-Importa `postman/IperIA-Auth.postman_collection.json`. Ejecuta *Iniciar sesión* y el token se guarda solo en `{{accessToken}}` para *Usuario actual (me)*.
+Importa `postman/IperIA-Auth.postman_collection.json`. Ejecuta *Iniciar sesión* (o *Iniciar sesión (Admin)*) y el token se guarda solo en `{{accessToken}}`. *Listar usuarios* guarda un `{{userId}}` para *Cambiar rol*.

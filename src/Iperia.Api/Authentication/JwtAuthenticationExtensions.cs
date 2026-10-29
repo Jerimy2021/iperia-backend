@@ -38,7 +38,7 @@ public static class JwtAuthenticationExtensions
                 };
             });
 
-        services.AddAuthorization();
+        services.AddAuthorization(options => options.AddRolePolicies());
 
         return services;
     }

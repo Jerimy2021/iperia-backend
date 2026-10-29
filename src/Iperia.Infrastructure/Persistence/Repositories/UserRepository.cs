@@ -19,6 +19,12 @@ public class UserRepository : IUserRepository
     public Task<User?> GetByEmailAsync(Email email, CancellationToken cancellationToken = default) =>
         _context.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
 
+    public Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
+        _context.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+
+    public async Task<IReadOnlyList<User>> ListAsync(CancellationToken cancellationToken = default) =>
+        await _context.Users.AsNoTracking().OrderBy(u => u.CreatedAt).ToListAsync(cancellationToken);
+
     public async Task AddAsync(User user, CancellationToken cancellationToken = default) =>
         await _context.Users.AddAsync(user, cancellationToken);
 }
