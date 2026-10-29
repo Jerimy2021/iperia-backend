@@ -27,4 +27,22 @@ dotnet ef migrations add <Nombre> -p src/Iperia.Infrastructure -s src/Iperia.Api
 dotnet ef database update -p src/Iperia.Infrastructure -s src/Iperia.Api
 ```
 
-La cadena de conexión de desarrollo está en `src/Iperia.Api/appsettings.Development.json` (`ConnectionStrings:IperiaDb`).
+## Configuración local
+
+La contraseña de PostgreSQL no se guarda en el repo: se define con user-secrets (sobrescribe `appsettings.Development.json`):
+
+```bash
+dotnet user-secrets set "ConnectionStrings:IperiaDb" "Host=localhost;Port=5432;Database=iperia;Username=postgres;Password=TU_PASSWORD" --project src/Iperia.Api
+```
+
+`Jwt:SecretKey` en `appsettings.Development.json` es solo para desarrollo. En producción se define con la variable de entorno `Jwt__SecretKey` (mínimo 32 caracteres).
+
+## Endpoints de autenticación
+
+| Método | Ruta | Descripción |
+|---|---|---|
+| POST | `/api/auth/register` | `{ fullName, email, password }` → 201 con el usuario (rol `Worker` por defecto) |
+| POST | `/api/auth/login` | `{ email, password }` → 200 con `accessToken`, `expiresAt` y el usuario |
+| GET | `/api/auth/me` | Requiere `Authorization: Bearer <accessToken>` → datos del usuario del token |
+
+Password: 8 a 72 caracteres, con mayúsculas, minúsculas y números.

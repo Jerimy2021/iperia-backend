@@ -1,3 +1,4 @@
+using Iperia.Api.Authentication;
 using Iperia.Api.ExceptionHandling;
 using Iperia.Application;
 using Iperia.Infrastructure;
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddJwtAuthentication(builder.Configuration);
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
@@ -15,7 +17,7 @@ builder.Services.AddProblemDetails();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerWithJwt();
 
 var app = builder.Build();
 
@@ -30,6 +32,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
