@@ -2,8 +2,8 @@
 
 ## Ramas
 
-- `main` — producción. Solo recibe merges desde `development` vía PR, nunca se le hacen commits directos.
-- `development` — rama de integración. Todas las features se integran aquí primero.
+- `main` — producción. Solo recibe merges desde `develop` vía PR, nunca se le hacen commits directos.
+- `develop` — rama de integración. Todas las features se integran aquí primero.
 
 ```
 feat/<descripcion>       nueva funcionalidad
@@ -12,7 +12,7 @@ chore/<descripcion>      mantenimiento, dependencias, configuración
 refactor/<descripcion>   cambio de estructura interna sin alterar comportamiento
 ```
 
-Toda rama nueva sale de `development` actualizado (`git checkout development && git pull && git checkout -b feat/mi-feature`). No crear una rama a partir de otra rama feature: si tu trabajo depende de algo que aún no está en `development`, espera a que se mergee o avísalo para priorizar ese PR.
+Toda rama nueva sale de `develop` actualizado (`git checkout develop && git pull && git checkout -b feat/mi-feature`). No crear una rama a partir de otra rama feature: si tu trabajo depende de algo que aún no está en `develop`, espera a que se mergee o avísalo para priorizar ese PR.
 
 ## Mensajes de commit
 
@@ -32,7 +32,7 @@ Ejemplos:
 
 ## Pull Requests
 
-- Todo PR va contra `development` (o `development` → `main` para releases).
+- Todo PR va contra `develop` (o `develop` → `main` para releases).
 - Usa la plantilla de `.github/pull_request_template.md`.
 - Requiere al menos 1 review aprobado y que pasen los checks de CI antes de poder mergear.
 - PRs chicos y enfocados en una sola cosa. Si tu rama ya tiene varios commits de features distintas, sepáralos en PRs distintos.
