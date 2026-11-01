@@ -29,7 +29,15 @@ dotnet ef database update -p src/Iperia.Infrastructure -s src/Iperia.Api
 
 ## Configuración local
 
-La contraseña de PostgreSQL no se guarda en el repo: se define con user-secrets (sobrescribe `appsettings.Development.json`):
+La base de datos de desarrollo corre en Docker (PostgreSQL 17 en el puerto **5434**, usuario `iperia`, password `iperia_dev`). `appsettings.Development.json` ya apunta a ella:
+
+```bash
+docker compose up -d                                                   # levanta PostgreSQL
+dotnet ef database update -p src/Iperia.Infrastructure -s src/Iperia.Api   # crea las tablas
+dotnet run --project src/Iperia.Api
+```
+
+Para usar otro PostgreSQL (por ejemplo uno instalado en tu equipo), sobrescribe la cadena con user-secrets sin tocar el repo:
 
 ```bash
 dotnet user-secrets set "ConnectionStrings:IperiaDb" "Host=localhost;Port=5432;Database=iperia;Username=postgres;Password=TU_PASSWORD" --project src/Iperia.Api
@@ -46,3 +54,7 @@ dotnet user-secrets set "ConnectionStrings:IperiaDb" "Host=localhost;Port=5432;D
 | GET | `/api/auth/me` | Requiere `Authorization: Bearer <accessToken>` → datos del usuario del token |
 
 Password: 8 a 72 caracteres, con mayúsculas, minúsculas y números.
+
+## Postman
+
+Importa `postman/IperIA-Auth.postman_collection.json`. Ejecuta *Iniciar sesión* y el token se guarda solo en `{{accessToken}}` para *Usuario actual (me)*.
