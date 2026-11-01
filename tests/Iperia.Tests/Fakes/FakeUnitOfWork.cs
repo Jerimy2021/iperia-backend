@@ -1,0 +1,14 @@
+using Iperia.Application.Ports.Out;
+
+namespace Iperia.Tests.Fakes;
+
+internal sealed class FakeUnitOfWork : IUnitOfWork
+{
+    public int SaveCount { get; private set; }
+
+    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        SaveCount++;
+        return Task.FromResult(1);
+    }
+}

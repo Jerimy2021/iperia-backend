@@ -1,3 +1,5 @@
+using Iperia.Application.Ports.In.Auth;
+using Iperia.Application.UseCases.Auth;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Iperia.Application;
@@ -9,6 +11,8 @@ public static class DependencyInjection
     /// </summary>
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
+
         return services;
     }
 }
