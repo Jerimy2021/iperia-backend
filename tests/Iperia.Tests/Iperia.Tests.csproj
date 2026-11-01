@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Iperia.Application\Iperia.Application.csproj" />
     <ProjectReference Include="..\..\src\Iperia.Domain\Iperia.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Iperia.Infrastructure\Iperia.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
