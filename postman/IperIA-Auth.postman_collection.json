@@ -1,0 +1,135 @@
+{
+  "info": {
+    "name": "IperIA - Auth",
+    "description": "Registro, inicio de sesión y usuario actual. El login guarda el token en la variable {{accessToken}} automáticamente.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5135" },
+    { "key": "accessToken", "value": "" },
+    { "key": "userId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/health"
+      }
+    },
+    {
+      "name": "Registrar usuario",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fullName\": \"Ana Perez\",\n  \"email\": \"ana.perez@tecsup.edu.pe\",\n  \"password\": \"Secreto123\"\n}"
+        },
+        "url": "{{baseUrl}}/api/auth/register"
+      }
+    },
+    {
+      "name": "Iniciar sesión",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    pm.collectionVariables.set('accessToken', pm.response.json().accessToken);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"ana.perez@tecsup.edu.pe\",\n  \"password\": \"Secreto123\"\n}"
+        },
+        "url": "{{baseUrl}}/api/auth/login"
+      }
+    },
+    {
+      "name": "Usuario actual (me)",
+      "request": {
+        "method": "GET",
+        "auth": {
+          "type": "bearer",
+          "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+        },
+        "url": "{{baseUrl}}/api/auth/me"
+      }
+    },
+    {
+      "name": "Iniciar sesión (Admin)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    pm.collectionVariables.set('accessToken', pm.response.json().accessToken);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@iperia.local\",\n  \"password\": \"Admin12345\"\n}"
+        },
+        "url": "{{baseUrl}}/api/auth/login"
+      }
+    },
+    {
+      "name": "Listar usuarios (Admin, Supervisor)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    const worker = pm.response.json().find(u => u.role !== 'Admin');",
+              "    if (worker) pm.collectionVariables.set('userId', worker.id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "auth": {
+          "type": "bearer",
+          "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+        },
+        "url": "{{baseUrl}}/api/users"
+      }
+    },
+    {
+      "name": "Cambiar rol (Admin)",
+      "request": {
+        "method": "PATCH",
+        "auth": {
+          "type": "bearer",
+          "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+        },
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"role\": \"Supervisor\"\n}"
+        },
+        "url": "{{baseUrl}}/api/users/{{userId}}/role"
+      }
+    }
+  ]
+}
