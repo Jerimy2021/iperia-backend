@@ -2,6 +2,7 @@ using Iperia.Api.Authentication;
 using Iperia.Api.ExceptionHandling;
 using Iperia.Application;
 using Iperia.Infrastructure;
+using Iperia.Infrastructure.Persistence.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,11 +24,15 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
+// Devuelve ProblemDetails también en 401/403, que por defecto van con cuerpo vacío.
+app.UseStatusCodePages();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    await app.Services.SeedAdminAsync();
 }
 
 app.UseHttpsRedirection();

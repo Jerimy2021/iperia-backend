@@ -52,4 +52,14 @@ public sealed class User : AggregateRoot
 
         return new User(Guid.NewGuid(), name, email, passwordHash, role, DateTime.UtcNow);
     }
+
+    public void ChangeRole(Role newRole)
+    {
+        if (!Enum.IsDefined(newRole))
+        {
+            throw new DomainException("El rol indicado no existe.");
+        }
+
+        Role = newRole;
+    }
 }
