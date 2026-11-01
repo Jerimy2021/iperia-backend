@@ -24,7 +24,7 @@
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             (dotnetCorePackages.combinePackages [
-              dotnetCorePackages.sdk_8_0
+              dotnetCorePackages.sdk_10_0
             ])
             gh
             awscli2
