@@ -99,7 +99,7 @@ El rol viaja dentro del token: después de cambiar el rol de alguien, esa person
 | POST | `/api/evidencias` | Cualquier usuario autenticado | `multipart/form-data` con `file`, `latitude` y `longitude` → 201 con la evidencia |
 
 - Formatos: **JPEG, PNG y WebP**, detectados por el contenido real del archivo (no por extensión ni `Content-Type`).
-- Tamaño máximo: **5 MB**. Un archivo que no es imagen, vacío o mayor al límite devuelve **400**.
+- Tamaño máximo: **10 MB** por defecto, configurable con `Evidences:MaxSizeMegabytes` (variable de entorno `Evidences__MaxSizeMegabytes`). Un archivo que no es imagen, vacío o mayor al límite devuelve **400**.
 - Latitud entre -90 y 90, longitud entre -180 y 180; fuera de rango devuelve **400**.
 - Cada evidencia guarda: ID único (`id`), clave del archivo en S3 (`evidencias/{año}/{mes}/{id}.{ext}`), `latitude`, `longitude`, fecha-hora del **servidor** (`createdAt`, UTC) y el responsable (`uploadedByUserId`, tomado del token).
 - Si falla el registro en la base de datos, el archivo subido se borra de S3.

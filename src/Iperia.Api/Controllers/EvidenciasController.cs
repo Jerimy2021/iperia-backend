@@ -1,4 +1,5 @@
 using Iperia.Api.Contracts.Evidences;
+using Iperia.Api.Filters;
 using Iperia.Application.Ports.In.Evidences;
 using Iperia.Infrastructure.Security;
 using Microsoft.AspNetCore.Authorization;
@@ -12,9 +13,6 @@ namespace Iperia.Api.Controllers;
 [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
 public class EvidenciasController : ControllerBase
 {
-    // Un poco más que el límite de la imagen (5 MB) para dejar espacio a los demás campos del formulario.
-    private const long MaxRequestBytes = 6 * 1024 * 1024;
-
     private readonly IUploadEvidenceUseCase _uploadEvidence;
 
     public EvidenciasController(IUploadEvidenceUseCase uploadEvidence)
@@ -27,7 +25,7 @@ public class EvidenciasController : ControllerBase
     /// </summary>
     [HttpPost]
     [Consumes("multipart/form-data")]
-    [RequestSizeLimit(MaxRequestBytes)]
+    [ServiceFilter(typeof(EvidenceRequestSizeFilter))]
     [ProducesResponseType(typeof(EvidenceResult), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Upload([FromForm] UploadEvidenceRequest request, CancellationToken cancellationToken)

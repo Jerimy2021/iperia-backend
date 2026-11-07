@@ -6,8 +6,6 @@ namespace Iperia.Application.UseCases.Evidences;
 /// </summary>
 public sealed record ImageFormat(string ContentType, string Extension)
 {
-    public const long MaxSizeBytes = 5 * 1024 * 1024;
-
     /// <summary>Bytes necesarios para reconocer cualquiera de los formatos.</summary>
     public const int HeaderLength = 12;
 

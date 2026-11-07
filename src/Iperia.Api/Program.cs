@@ -1,5 +1,6 @@
 using Iperia.Api.Authentication;
 using Iperia.Api.ExceptionHandling;
+using Iperia.Api.Filters;
 using Iperia.Application;
 using Iperia.Infrastructure;
 using Iperia.Infrastructure.Persistence.Seed;
@@ -15,6 +16,7 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
+builder.Services.AddScoped<EvidenceRequestSizeFilter>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

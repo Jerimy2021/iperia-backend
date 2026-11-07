@@ -4,7 +4,7 @@ namespace Iperia.Api.Contracts.Evidences;
 
 public sealed class UploadEvidenceRequest
 {
-    /// <summary>Imagen JPEG, PNG o WebP de hasta 5 MB.</summary>
+    /// <summary>Imagen JPEG, PNG o WebP dentro del límite configurado (por defecto 10 MB).</summary>
     [Required]
     public IFormFile File { get; init; } = null!;
 

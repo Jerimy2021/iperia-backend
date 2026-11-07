@@ -2,6 +2,7 @@ using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
 using Iperia.Application.Ports.Out;
+using Iperia.Application.UseCases.Evidences;
 using Iperia.Infrastructure.Persistence;
 using Iperia.Infrastructure.Persistence.Repositories;
 using Iperia.Infrastructure.Security;
@@ -37,6 +38,21 @@ public static class DependencyInjection
         services.AddSingleton<ITokenGenerator, JwtTokenGenerator>();
 
         services.AddEvidenceStorage(configuration);
+        services.AddEvidenceUploadOptions(configuration);
+
+        return services;
+    }
+
+    private static IServiceCollection AddEvidenceUploadOptions(this IServiceCollection services, IConfiguration configuration)
+    {
+        var options = configuration.GetSection(EvidenceUploadOptions.SectionName).Get<EvidenceUploadOptions>()
+            ?? new EvidenceUploadOptions();
+        if (!options.IsValid())
+        {
+            throw new InvalidOperationException("Configuración 'Evidences' inválida: MaxSizeMegabytes debe ser mayor que 0.");
+        }
+
+        services.AddSingleton(options);
 
         return services;
     }

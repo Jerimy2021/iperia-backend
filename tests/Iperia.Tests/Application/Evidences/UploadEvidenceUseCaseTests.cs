@@ -19,8 +19,10 @@ public class UploadEvidenceUseCaseTests
     private readonly FakeUnitOfWork _unitOfWork = new();
     private readonly Guid _userId = Guid.NewGuid();
 
-    private UploadEvidenceUseCase CreateUseCase(IUnitOfWork? unitOfWork = null) =>
-        new(_storage, _evidences, unitOfWork ?? _unitOfWork);
+    private readonly EvidenceUploadOptions _options = new();
+
+    private UploadEvidenceUseCase CreateUseCase(IUnitOfWork? unitOfWork = null, EvidenceUploadOptions? options = null) =>
+        new(_storage, _evidences, unitOfWork ?? _unitOfWork, options ?? _options);
 
     private UploadEvidenceCommand Command(byte[] content, double lat = -12.0464, double lon = -77.0428) =>
         new(new MemoryStream(content), content.Length, lat, lon, _userId);
@@ -91,22 +93,39 @@ public class UploadEvidenceUseCaseTests
     [Fact]
     public async Task ArchivoMayorAlLimite_SeRechazaSinSubirNada()
     {
-        var command = new UploadEvidenceCommand(new MemoryStream(Jpeg), ImageFormat.MaxSizeBytes + 1, 0, 0, _userId);
+        var command = new UploadEvidenceCommand(new MemoryStream(Jpeg), _options.MaxSizeBytes + 1, 0, 0, _userId);
 
         var ex = await Assert.ThrowsAsync<ValidationException>(() => CreateUseCase().ExecuteAsync(command));
 
-        Assert.Contains("5 MB", ex.Message);
+        Assert.Contains("10 MB", ex.Message);
         Assert.Empty(_storage.Files);
     }
 
     [Fact]
     public async Task ArchivoExactamenteEnElLimite_SeAcepta()
     {
-        var command = new UploadEvidenceCommand(new MemoryStream(Jpeg), ImageFormat.MaxSizeBytes, 0, 0, _userId);
+        var command = new UploadEvidenceCommand(new MemoryStream(Jpeg), _options.MaxSizeBytes, 0, 0, _userId);
 
         var result = await CreateUseCase().ExecuteAsync(command);
 
-        Assert.Equal(ImageFormat.MaxSizeBytes, result.SizeBytes);
+        Assert.Equal(_options.MaxSizeBytes, result.SizeBytes);
+    }
+
+    [Fact]
+    public async Task ElLimiteSeTomaDeLaConfiguracion()
+    {
+        var useCase = CreateUseCase(options: new EvidenceUploadOptions { MaxSizeMegabytes = 1 });
+        var command = new UploadEvidenceCommand(new MemoryStream(Jpeg), 1024 * 1024 + 1, 0, 0, _userId);
+
+        var ex = await Assert.ThrowsAsync<ValidationException>(() => useCase.ExecuteAsync(command));
+
+        Assert.Contains("1 MB", ex.Message);
+    }
+
+    [Fact]
+    public void ElLimitePorDefectoEs10Mb()
+    {
+        Assert.Equal(10 * 1024 * 1024, new EvidenceUploadOptions().MaxSizeBytes);
     }
 
     [Theory]

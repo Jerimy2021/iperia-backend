@@ -10,12 +10,18 @@ public sealed class UploadEvidenceUseCase : IUploadEvidenceUseCase
     private readonly IEvidenceStorage _storage;
     private readonly IEvidenceRepository _evidences;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly EvidenceUploadOptions _options;
 
-    public UploadEvidenceUseCase(IEvidenceStorage storage, IEvidenceRepository evidences, IUnitOfWork unitOfWork)
+    public UploadEvidenceUseCase(
+        IEvidenceStorage storage,
+        IEvidenceRepository evidences,
+        IUnitOfWork unitOfWork,
+        EvidenceUploadOptions options)
     {
         _storage = storage;
         _evidences = evidences;
         _unitOfWork = unitOfWork;
+        _options = options;
     }
 
     public async Task<EvidenceResult> ExecuteAsync(UploadEvidenceCommand command, CancellationToken cancellationToken = default)
@@ -25,10 +31,9 @@ public sealed class UploadEvidenceUseCase : IUploadEvidenceUseCase
             throw new ValidationException("El archivo está vacío.");
         }
 
-        if (command.SizeBytes > ImageFormat.MaxSizeBytes)
+        if (command.SizeBytes > _options.MaxSizeBytes)
         {
-            throw new ValidationException(
-                $"El archivo supera el tamaño máximo de {ImageFormat.MaxSizeBytes / (1024 * 1024)} MB.");
+            throw new ValidationException($"El archivo supera el tamaño máximo de {_options.MaxSizeMegabytes} MB.");
         }
 
         var format = await DetectFormatAsync(command.Content, cancellationToken)
