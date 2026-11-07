@@ -18,13 +18,13 @@ public class RegisterUserUseCaseTests
     }
 
     [Fact]
-    public async Task Registra_UsuarioConPasswordHasheadoYRolWorker()
+    public async Task Registra_UsuarioConPasswordHasheadoYRolOperario()
     {
         var result = await _useCase.ExecuteAsync(new RegisterUserCommand("Ana Pérez", "Ana@Mail.com", "Secreto123"));
 
         var saved = Assert.Single(_users.Users);
         Assert.Equal("ana@mail.com", result.Email);
-        Assert.Equal("Worker", result.Role);
+        Assert.Equal("Operario", result.Role);
         Assert.Equal("hashed:Secreto123", saved.PasswordHash);
         Assert.Equal(1, _unitOfWork.SaveCount);
     }
