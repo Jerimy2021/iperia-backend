@@ -1,3 +1,4 @@
+using Iperia.Application.Iperc;
 using Iperia.Application.Ports.In.Auth;
 using Iperia.Application.Ports.In.Users;
 using Iperia.Application.UseCases.Auth;
@@ -18,6 +19,7 @@ public static class DependencyInjection
         services.AddScoped<ILogoutUserUseCase, LogoutUserUseCase>();
         services.AddScoped<IListUsersUseCase, ListUsersUseCase>();
         services.AddScoped<IChangeUserRoleUseCase, ChangeUserRoleUseCase>();
+        services.AddScoped<IpercRiskCalculator>();
 
         return services;
     }

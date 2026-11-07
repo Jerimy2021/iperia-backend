@@ -22,6 +22,126 @@ namespace Iperia.Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Iperia.Domain.Iperc.Actividad", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("nombre");
+
+                    b.Property<Guid>("TareaId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tarea_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TareaId");
+
+                    b.ToTable("actividades", (string)null);
+                });
+
+            modelBuilder.Entity("Iperia.Domain.Iperc.Peligro", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("ActividadId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("actividad_id");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("descripcion");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActividadId");
+
+                    b.ToTable("peligros", (string)null);
+                });
+
+            modelBuilder.Entity("Iperia.Domain.Iperc.Puesto", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)")
+                        .HasColumnName("nombre");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("puestos", (string)null);
+                });
+
+            modelBuilder.Entity("Iperia.Domain.Iperc.Riesgo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("PeligroId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("peligro_id");
+
+                    b.Property<int>("Probabilidad")
+                        .HasColumnType("integer")
+                        .HasColumnName("probabilidad");
+
+                    b.Property<int>("Severidad")
+                        .HasColumnType("integer")
+                        .HasColumnName("severidad");
+
+                    b.Property<int>("Valor")
+                        .HasColumnType("integer")
+                        .HasColumnName("valor");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PeligroId")
+                        .IsUnique();
+
+                    b.ToTable("riesgos", (string)null);
+                });
+
+            modelBuilder.Entity("Iperia.Domain.Iperc.Tarea", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("nombre");
+
+                    b.Property<Guid>("PuestoId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("puesto_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PuestoId");
+
+                    b.ToTable("tareas", (string)null);
+                });
+
             modelBuilder.Entity("Iperia.Domain.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -80,6 +200,62 @@ namespace Iperia.Infrastructure.Persistence.Migrations
                     b.HasIndex("ExpiresAt");
 
                     b.ToTable("revoked_tokens", (string)null);
+                });
+
+            modelBuilder.Entity("Iperia.Domain.Iperc.Actividad", b =>
+                {
+                    b.HasOne("Iperia.Domain.Iperc.Tarea", null)
+                        .WithMany("Actividades")
+                        .HasForeignKey("TareaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Iperia.Domain.Iperc.Peligro", b =>
+                {
+                    b.HasOne("Iperia.Domain.Iperc.Actividad", null)
+                        .WithMany("Peligros")
+                        .HasForeignKey("ActividadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Iperia.Domain.Iperc.Riesgo", b =>
+                {
+                    b.HasOne("Iperia.Domain.Iperc.Peligro", null)
+                        .WithOne("Riesgo")
+                        .HasForeignKey("Iperia.Domain.Iperc.Riesgo", "PeligroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Iperia.Domain.Iperc.Tarea", b =>
+                {
+                    b.HasOne("Iperia.Domain.Iperc.Puesto", null)
+                        .WithMany("Tareas")
+                        .HasForeignKey("PuestoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Iperia.Domain.Iperc.Actividad", b =>
+                {
+                    b.Navigation("Peligros");
+                });
+
+            modelBuilder.Entity("Iperia.Domain.Iperc.Peligro", b =>
+                {
+                    b.Navigation("Riesgo");
+                });
+
+            modelBuilder.Entity("Iperia.Domain.Iperc.Puesto", b =>
+                {
+                    b.Navigation("Tareas");
+                });
+
+            modelBuilder.Entity("Iperia.Domain.Iperc.Tarea", b =>
+                {
+                    b.Navigation("Actividades");
                 });
 #pragma warning restore 612, 618
         }

@@ -45,6 +45,23 @@ dotnet user-secrets set "ConnectionStrings:IperiaDb" "Host=localhost;Port=5432;D
 
 `Jwt:SecretKey` en `appsettings.Development.json` es solo para desarrollo. En producción se define con la variable de entorno `Jwt__SecretKey` (mínimo 32 caracteres).
 
+## Matriz IPERC
+
+El modelo (`Puesto → Tarea → Actividad → Peligro → Riesgo`) vive en `Iperia.Domain/Iperc` y el cálculo en `IpercRiskCalculator` (`Iperia.Application/Iperc`). `riesgo = probabilidad × severidad`, y las escalas y umbrales se leen de **`config/iperc_matrix.json`**, no del código: cambiar el JSON cambia el resultado sin recompilar (el archivo se vuelve a leer cuando cambia). Para usar otro archivo: `Iperc:MatrixPath` (variable de entorno `Iperc__MatrixPath`).
+
+Estado de la matriz:
+- **Severidad:** confirmada (sin lesión 0, lesión no incapacitante 2, incapacitante temporal 4, incapacitante permanente 6, fatalidad 8).
+- **Probabilidad y umbrales de nivel** (ACEPTABLE, MODERADO, IMPORTANTE, INTOLERABLE): **pendientes de confirmar con Ing. Industrial**; el archivo trae placeholders `TODO` y no se inventaron valores. Mientras estén vacíos, el cálculo responde que la matriz no está completa (`503` cuando exista el endpoint).
+
+Al confirmarlos, se completan así (niveles en orden ascendente; cada uno empieza en `desde`, inclusive):
+
+```json
+"probabilidad": { "escala": { "nombre": 1 } },
+"umbrales": { "niveles": [ { "nivel": "ACEPTABLE", "desde": 0 }, { "nivel": "MODERADO", "desde": 5 }, { "nivel": "IMPORTANTE", "desde": 10 }, { "nivel": "INTOLERABLE", "desde": 20 } ] }
+```
+
+(Los números del ejemplo son ilustrativos, no los reales.) Luego se actualiza el test `ArchivoReal_NoInventaProbabilidadNiUmbralesPendientes`.
+
 ## Endpoints de autenticación
 
 | Método | Ruta | Descripción |

@@ -1,4 +1,5 @@
 using Iperia.Application.Ports.Out;
+using Iperia.Infrastructure.Iperc;
 using Iperia.Infrastructure.Persistence;
 using Iperia.Infrastructure.Persistence.Repositories;
 using Iperia.Infrastructure.Security;
@@ -30,6 +31,15 @@ public static class DependencyInjection
 
         services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
         services.AddSingleton<ITokenGenerator, JwtTokenGenerator>();
+
+        // La matriz IPERC se empaqueta junto a la Api (config/iperc_matrix.json); Iperc:MatrixPath permite apuntar a otro archivo.
+        var matrixPath = configuration["Iperc:MatrixPath"];
+        if (string.IsNullOrWhiteSpace(matrixPath))
+        {
+            matrixPath = Path.Combine(AppContext.BaseDirectory, "config", "iperc_matrix.json");
+        }
+
+        services.AddSingleton<IIpercMatrixProvider>(new JsonIpercMatrixProvider(matrixPath));
 
         return services;
     }
