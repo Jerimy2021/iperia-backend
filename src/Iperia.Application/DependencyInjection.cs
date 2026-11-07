@@ -15,6 +15,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
         services.AddScoped<ILoginUserUseCase, LoginUserUseCase>();
+        services.AddScoped<ILogoutUserUseCase, LogoutUserUseCase>();
         services.AddScoped<IListUsersUseCase, ListUsersUseCase>();
         services.AddScoped<IChangeUserRoleUseCase, ChangeUserRoleUseCase>();
 

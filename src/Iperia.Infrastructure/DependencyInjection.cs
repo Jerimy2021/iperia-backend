@@ -24,6 +24,7 @@ public static class DependencyInjection
         services.AddDbContext<IperiaDbContext>(options => options.UseNpgsql(connectionString));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IRevokedTokenStore, RevokedTokenStore>();
 
         services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
 

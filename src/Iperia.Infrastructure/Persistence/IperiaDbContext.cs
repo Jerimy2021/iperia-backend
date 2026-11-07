@@ -1,4 +1,5 @@
 using Iperia.Domain.Users;
+using Iperia.Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Iperia.Infrastructure.Persistence;
@@ -10,6 +11,7 @@ public class IperiaDbContext : DbContext
     }
 
     public DbSet<User> Users => Set<User>();
+    public DbSet<RevokedToken> RevokedTokens => Set<RevokedToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
