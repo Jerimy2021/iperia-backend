@@ -43,6 +43,8 @@ Para usar otro PostgreSQL (por ejemplo uno instalado en tu equipo), sobrescribe 
 dotnet user-secrets set "ConnectionStrings:IperiaDb" "Host=localhost;Port=5432;Database=iperia;Username=postgres;Password=TU_PASSWORD" --project src/Iperia.Api
 ```
 
+`docker compose up -d` también levanta un S3 local (emulador S3Mock en `http://localhost:9090`) con el bucket `iperia-evidencias`. Guarda los archivos mientras el contenedor exista. En AWS se configura la sección `S3` (`S3__BucketName`, `S3__Region`) y se usa el rol IAM; `ServiceUrl` y las claves quedan vacías.
+
 `Jwt:SecretKey` en `appsettings.Development.json` es solo para desarrollo. En producción se define con la variable de entorno `Jwt__SecretKey` (mínimo 32 caracteres).
 
 ## Endpoints de autenticación
@@ -89,6 +91,18 @@ Para proteger un endpoint nuevo se usan las políticas de `src/Iperia.Api/Authen
 El rol viaja dentro del token: después de cambiar el rol de alguien, esa persona debe volver a iniciar sesión.
 
 **Admin inicial (desarrollo):** al arrancar en `Development` se crea `admin@iperia.local` / `Admin12345` (sección `SeedAdmin` de `appsettings.Development.json`) si todavía no existe.
+
+## Evidencias
+
+| Método | Ruta | Acceso | Descripción |
+|---|---|---|---|
+| POST | `/api/evidencias` | Cualquier usuario autenticado | `multipart/form-data` con `file`, `latitude` y `longitude` → 201 con la evidencia |
+
+- Formatos: **JPEG, PNG y WebP**, detectados por el contenido real del archivo (no por extensión ni `Content-Type`).
+- Tamaño máximo: **5 MB**. Un archivo que no es imagen, vacío o mayor al límite devuelve **400**.
+- Latitud entre -90 y 90, longitud entre -180 y 180; fuera de rango devuelve **400**.
+- Cada evidencia guarda: ID único (`id`), clave del archivo en S3 (`evidencias/{año}/{mes}/{id}.{ext}`), `latitude`, `longitude`, fecha-hora del **servidor** (`createdAt`, UTC) y el responsable (`uploadedByUserId`, tomado del token).
+- Si falla el registro en la base de datos, el archivo subido se borra de S3.
 
 ## Postman
 
