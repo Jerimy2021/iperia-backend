@@ -1,7 +1,7 @@
 # iperia-backend
 API de IperIA: auth, evidencias, IPERC, órdenes de trabajo, auditoría y notificaciones.
 
-Stack: .NET 8 · ASP.NET Core Web API · PostgreSQL · Entity Framework Core · arquitectura hexagonal + DDD.
+Stack: .NET 10 · ASP.NET Core Web API · PostgreSQL · Entity Framework Core · arquitectura hexagonal + DDD.
 
 ## Capas
 

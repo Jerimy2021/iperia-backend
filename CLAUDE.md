@@ -2,7 +2,7 @@
 
 API de IperIA: autenticación, evidencias, IPERC, órdenes de trabajo, auditoría y notificaciones.
 
-- .NET 8, arquitectura hexagonal (ver `src/Iperia.Domain`, `Iperia.Application`, `Iperia.Infrastructure`, `Iperia.Api`).
+- .NET 10, arquitectura hexagonal (ver `src/Iperia.Domain`, `Iperia.Application`, `Iperia.Infrastructure`, `Iperia.Api`).
 - PostgreSQL vía EF Core. Objetivo de despliegue: serverless en AWS (hoy el código corre como Web API clásico; ver página "Roadmap AWS Serverless" en la wiki del repo).
 - Documentación extendida en la Wiki de GitHub: Arquitectura, Convenciones de Git, Entorno de desarrollo, Roadmap AWS Serverless.
 
@@ -34,7 +34,7 @@ Ambos deben pasar en limpio. El pipeline de CI (`.github/workflows/ci.yml`) corr
 
 ## Entorno
 
-El repo trae `flake.nix` + `.envrc` (Nix + direnv): .NET 8 SDK, `gh`, AWS CLI v2, `psql`. `nix develop` (o `direnv allow`) para activar. `docker compose up -d` levanta PostgreSQL local en `localhost:5434`.
+El repo trae `flake.nix` + `.envrc` (Nix + direnv): .NET 10 SDK, `gh`, AWS CLI v2, `psql`. `nix develop` (o `direnv allow`) para activar. `docker compose up -d` levanta PostgreSQL local en `localhost:5434`.
 
 ## Seguridad
 
