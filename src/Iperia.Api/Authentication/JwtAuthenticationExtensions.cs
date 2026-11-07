@@ -1,4 +1,5 @@
 using System.Text;
+using Iperia.Application.Ports.Out;
 using Iperia.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -35,6 +36,21 @@ public static class JwtAuthenticationExtensions
                     ClockSkew = TimeSpan.FromMinutes(1),
                     NameClaimType = JwtClaims.Name,
                     RoleClaimType = JwtClaims.Role
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    // Rechaza con 401 los tokens cerrados con /auth/logout aunque todavía no hayan expirado.
+                    OnTokenValidated = async context =>
+                    {
+                        var tokenId = context.Principal?.FindFirst(JwtClaims.TokenId)?.Value;
+                        var revokedTokens = context.HttpContext.RequestServices.GetRequiredService<IRevokedTokenStore>();
+
+                        if (string.IsNullOrEmpty(tokenId)
+                            || await revokedTokens.IsRevokedAsync(tokenId, context.HttpContext.RequestAborted))
+                        {
+                            context.Fail("El token fue revocado.");
+                        }
+                    }
                 };
             });
 

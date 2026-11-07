@@ -12,11 +12,16 @@ public class AuthController : ControllerBase
 {
     private readonly IRegisterUserUseCase _registerUser;
     private readonly ILoginUserUseCase _loginUser;
+    private readonly ILogoutUserUseCase _logoutUser;
 
-    public AuthController(IRegisterUserUseCase registerUser, ILoginUserUseCase loginUser)
+    public AuthController(
+        IRegisterUserUseCase registerUser,
+        ILoginUserUseCase loginUser,
+        ILogoutUserUseCase logoutUser)
     {
         _registerUser = registerUser;
         _loginUser = loginUser;
+        _logoutUser = logoutUser;
     }
 
     [HttpPost("register")]
@@ -42,6 +47,24 @@ public class AuthController : ControllerBase
             cancellationToken);
 
         return Ok(result);
+    }
+
+    /// <summary>
+    /// Cierra la sesión: el token usado en esta llamada deja de ser válido.
+    /// </summary>
+    [Authorize]
+    [HttpPost("logout")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> Logout(CancellationToken cancellationToken)
+    {
+        var tokenId = User.FindFirst(JwtClaims.TokenId)?.Value ?? string.Empty;
+        var exp = long.Parse(User.FindFirst(JwtClaims.Expiration)!.Value);
+        var expiresAt = DateTimeOffset.FromUnixTimeSeconds(exp).UtcDateTime;
+
+        await _logoutUser.ExecuteAsync(new LogoutUserCommand(tokenId, expiresAt), cancellationToken);
+
+        return NoContent();
     }
 
     /// <summary>

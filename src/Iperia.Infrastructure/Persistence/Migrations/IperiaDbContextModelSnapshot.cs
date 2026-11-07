@@ -63,6 +63,24 @@ namespace Iperia.Infrastructure.Persistence.Migrations
 
                     b.ToTable("users", (string)null);
                 });
+
+            modelBuilder.Entity("Iperia.Infrastructure.Persistence.Entities.RevokedToken", b =>
+                {
+                    b.Property<string>("TokenId")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasColumnName("token_id");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at");
+
+                    b.HasKey("TokenId");
+
+                    b.HasIndex("ExpiresAt");
+
+                    b.ToTable("revoked_tokens", (string)null);
+                });
 #pragma warning restore 612, 618
         }
     }

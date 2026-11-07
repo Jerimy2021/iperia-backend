@@ -34,7 +34,7 @@ public class UsersController : ControllerBase
         Ok(await _listUsers.ExecuteAsync(cancellationToken));
 
     /// <summary>
-    /// Cambia el rol de un usuario (Admin, Supervisor, Worker). Solo Admin.
+    /// Cambia el rol de un usuario (Admin, Operario, Supervisor, GerenciaEhs, Brigadista). Solo Admin.
     /// </summary>
     [HttpPatch("{id:guid}/role")]
     [Authorize(Policy = Policies.AdminOnly)]

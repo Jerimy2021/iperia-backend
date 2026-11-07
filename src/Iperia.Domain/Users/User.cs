@@ -31,7 +31,7 @@ public sealed class User : AggregateRoot
     /// <summary>
     /// Crea un usuario nuevo. El password llega ya hasheado: el dominio nunca ve el texto plano.
     /// </summary>
-    public static User Register(string? fullName, Email email, string passwordHash, Role role = Role.Worker)
+    public static User Register(string? fullName, Email email, string passwordHash, Role role = Role.Operario)
     {
         var name = fullName?.Trim() ?? string.Empty;
 
