@@ -1,0 +1,18 @@
+{
+  "_comentario": "Matriz IPERC. riesgo = probabilidad x severidad. Las claves que empiezan con _ se ignoran.",
+  "severidad": {
+    "sinLesion": 0,
+    "lesionNoIncapacitante": 2,
+    "incapacitanteTemporal": 4,
+    "incapacitantePermanente": 6,
+    "fatalidad": 8
+  },
+  "probabilidad": {
+    "_comentario": "TODO confirmar escala con Ing. Industrial. Al confirmarla, completar escala con pares nombre: valor (ej. \"nombre\": 1). Hasta entonces el cálculo responde que la matriz no está completa.",
+    "escala": {}
+  },
+  "umbrales": {
+    "_comentario": "TODO confirmar rangos de ACEPTABLE/MODERADO/IMPORTANTE/INTOLERABLE con Ing. Industrial. Al confirmarlos, completar niveles en orden ascendente: cada nivel empieza en 'desde' (inclusive) y llega hasta el siguiente. Ej. { \"nivel\": \"ACEPTABLE\", \"desde\": 0 }.",
+    "niveles": []
+  }
+}

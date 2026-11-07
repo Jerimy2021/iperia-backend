@@ -17,6 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Matriz IPERC editable sin recompilar: se copia junto al ejecutable. -->
+    <Content Include="..\..\config\iperc_matrix.json" Link="config\iperc_matrix.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Iperia.Infrastructure\Iperia.Infrastructure.csproj" />
     <ProjectReference Include="..\Iperia.Application\Iperia.Application.csproj" />
   </ItemGroup>

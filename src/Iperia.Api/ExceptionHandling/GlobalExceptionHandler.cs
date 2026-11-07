@@ -26,6 +26,7 @@ public class GlobalExceptionHandler : IExceptionHandler
             UnauthorizedException => (StatusCodes.Status401Unauthorized, "No autorizado"),
             NotFoundException => (StatusCodes.Status404NotFound, "Recurso no encontrado"),
             ConflictException => (StatusCodes.Status409Conflict, "Conflicto"),
+            IpercMatrixNotConfiguredException => (StatusCodes.Status503ServiceUnavailable, "Matriz IPERC no configurada"),
             _ => (StatusCodes.Status500InternalServerError, "Error interno del servidor")
         };
 
