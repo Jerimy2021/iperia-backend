@@ -1,6 +1,8 @@
 using Iperia.Application.Ports.In.Auth;
+using Iperia.Application.Ports.In.Evidences;
 using Iperia.Application.Ports.In.Users;
 using Iperia.Application.UseCases.Auth;
+using Iperia.Application.UseCases.Evidences;
 using Iperia.Application.UseCases.Users;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,6 +20,7 @@ public static class DependencyInjection
         services.AddScoped<ILogoutUserUseCase, LogoutUserUseCase>();
         services.AddScoped<IListUsersUseCase, ListUsersUseCase>();
         services.AddScoped<IChangeUserRoleUseCase, ChangeUserRoleUseCase>();
+        services.AddScoped<IUploadEvidenceUseCase, UploadEvidenceUseCase>();
 
         return services;
     }

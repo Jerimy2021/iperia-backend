@@ -66,6 +66,25 @@
       }
     },
     {
+      "name": "Subir evidencia",
+      "request": {
+        "method": "POST",
+        "auth": {
+          "type": "bearer",
+          "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+        },
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "file", "type": "file", "src": [] },
+            { "key": "latitude", "value": "-12.0464", "type": "text" },
+            { "key": "longitude", "value": "-77.0428", "type": "text" }
+          ]
+        },
+        "url": "{{baseUrl}}/api/evidencias"
+      }
+    },
+    {
       "name": "Cerrar sesión (logout)",
       "request": {
         "method": "POST",

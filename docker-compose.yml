@@ -18,5 +18,15 @@ services:
       timeout: 3s
       retries: 10
 
+  # S3 local para las evidencias (emulador S3Mock; MinIO ya no publica imágenes). Acepta cualquier credencial.
+  # Los archivos viven mientras el contenedor exista. El bucket se crea solo al arrancar; debe coincidir con S3:BucketName de appsettings.Development.json.
+  s3:
+    image: adobe/s3mock
+    container_name: iperia-s3
+    environment:
+      COM_ADOBE_TESTING_S3MOCK_STORE_INITIAL_BUCKETS: iperia-evidencias
+    ports:
+      - "9090:9090"
+
 volumes:
   iperia-pgdata:
