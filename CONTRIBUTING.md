@@ -48,6 +48,6 @@ Ambos deben pasar en local. El pipeline de CI corre lo mismo en cada PR.
 
 ## Entorno de desarrollo
 
-El repo trae `flake.nix` + `.envrc` (Nix + direnv) con .NET 8 SDK, AWS CLI, GitHub CLI (`gh`) y cliente de PostgreSQL. Al entrar al directorio con direnv activado, el entorno se carga solo. Sin direnv: `nix develop`.
+El repo trae `flake.nix` + `.envrc` (Nix + direnv) con .NET 10 SDK, AWS CLI, GitHub CLI (`gh`) y cliente de PostgreSQL. Al entrar al directorio con direnv activado, el entorno se carga solo. Sin direnv: `nix develop`.
 
 Base de datos local: `docker compose up -d` levanta PostgreSQL en `localhost:5434`.
