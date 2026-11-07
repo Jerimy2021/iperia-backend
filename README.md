@@ -49,7 +49,7 @@ dotnet user-secrets set "ConnectionStrings:IperiaDb" "Host=localhost;Port=5432;D
 
 | Método | Ruta | Descripción |
 |---|---|---|
-| POST | `/api/auth/register` | `{ fullName, email, password }` → 201 con el usuario (rol `Worker` por defecto) |
+| POST | `/api/auth/register` | `{ fullName, email, password }` → 201 con el usuario (rol `Operario` por defecto) |
 | POST | `/api/auth/login` | `{ email, password }` → 200 con `accessToken`, `expiresAt` y el usuario |
 | GET | `/api/auth/me` | Requiere `Authorization: Bearer <accessToken>` → datos del usuario del token |
 
@@ -57,7 +57,17 @@ Password: 8 a 72 caracteres, con mayúsculas, minúsculas y números.
 
 ## Roles y permisos
 
-Roles: `Admin`, `Supervisor`, `Worker` (por defecto al registrarse).
+Roles: `Admin`, `Operario` (por defecto al registrarse), `Supervisor`, `GerenciaEhs` y `Brigadista`.
+`Admin` tiene los permisos de todos los demás roles, además de la gestión de usuarios.
+
+| Permiso (política) | Admin | Operario | Supervisor | Gerencia EHS | Brigadista |
+|---|:-:|:-:|:-:|:-:|:-:|
+| Gestionar roles de usuarios (`AdminOnly`) | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Listar usuarios (`AdminOrSupervisor`) | ✅ | ❌ | ✅ | ❌ | ❌ |
+| Aprobar órdenes de trabajo (`CanApproveWorkOrder`) | ✅ | ❌ | ✅ | ❌ | ❌ |
+| Ver el dashboard gerencial (`CanViewManagementDashboard`) | ✅ | ❌ | ❌ | ✅ | ❌ |
+
+Las políticas de aprobación de OT y dashboard gerencial ya existen; se aplicarán con `[Authorize(Policy = ...)]` cuando se creen esos módulos. Si cambia la matriz, se actualiza `Policies.cs` y esta tabla.
 
 | Método | Ruta | Acceso | Descripción |
 |---|---|---|---|
@@ -71,6 +81,8 @@ Para proteger un endpoint nuevo se usan las políticas de `src/Iperia.Api/Authen
 ```csharp
 [Authorize(Policy = Policies.AdminOnly)]          // solo Admin
 [Authorize(Policy = Policies.AdminOrSupervisor)]  // Admin o Supervisor
+[Authorize(Policy = Policies.CanApproveWorkOrder)] // Admin o Supervisor
+[Authorize(Policy = Policies.CanViewManagementDashboard)] // Admin o Gerencia EHS
 [Authorize]                                       // cualquier usuario autenticado
 ```
 

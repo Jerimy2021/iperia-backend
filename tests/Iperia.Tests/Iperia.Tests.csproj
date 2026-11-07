@@ -21,6 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Iperia.Api\Iperia.Api.csproj" />
     <ProjectReference Include="..\..\src\Iperia.Application\Iperia.Application.csproj" />
     <ProjectReference Include="..\..\src\Iperia.Domain\Iperia.Domain.csproj" />
     <ProjectReference Include="..\..\src\Iperia.Infrastructure\Iperia.Infrastructure.csproj" />
