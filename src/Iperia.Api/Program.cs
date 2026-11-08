@@ -1,3 +1,4 @@
+using Amazon.Lambda.AspNetCoreServer.Hosting;
 using Iperia.Api.Authentication;
 using Iperia.Api.ExceptionHandling;
 using Iperia.Application;
@@ -14,6 +15,10 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+
+// Dentro de AWS Lambda (API Gateway HTTP API) la app responde eventos de Lambda en vez de abrir Kestrel.
+// Fuera de Lambda (dotnet run, tests, Docker) no hace nada: el flujo local no cambia.
+builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -1,0 +1,40 @@
+# Despliegue de la API en AWS Lambda + API Gateway (HTTP API) con Serverless Framework.
+# Guía completa, decisiones y pendientes: docs/aws-lambda.md
+#
+# Los secretos NO viven en este archivo: se leen de variables de entorno del equipo/CI al momento de desplegar
+# (${env:...}). El repo es público; nunca escribir aquí valores reales.
+
+service: iperia-backend
+
+frameworkVersion: "4"
+
+provider:
+  name: aws
+  runtime: dotnet10
+  architecture: arm64
+  region: ${opt:region, 'us-east-1'}
+  stage: ${opt:stage, 'dev'}
+  memorySize: 1024
+  timeout: 29 # API Gateway HTTP API corta a los 30 s
+  environment:
+    ASPNETCORE_ENVIRONMENT: ${self:provider.stage}
+    ConnectionStrings__IperiaDb: ${env:IPERIA_DB_CONNECTION_STRING}
+    Jwt__SecretKey: ${env:IPERIA_JWT_SECRET_KEY}
+    Jwt__Issuer: ${env:IPERIA_JWT_ISSUER, 'iperia-api'}
+    Jwt__Audience: ${env:IPERIA_JWT_AUDIENCE, 'iperia-clients'}
+
+package:
+  # El paquete lo arma `dotnet publish` + zip (ver docs/aws-lambda.md y el job "package" de CI).
+  artifact: artifacts/iperia-api.zip
+
+functions:
+  api:
+    # Con hosting mínimo (AddAWSLambdaHosting) el handler es el nombre del ensamblado.
+    handler: Iperia.Api
+    events:
+      - httpApi:
+          path: /{proxy+}
+          method: ANY
+      - httpApi:
+          path: /
+          method: ANY
