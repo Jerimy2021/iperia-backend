@@ -93,3 +93,7 @@ El rol viaja dentro del token: después de cambiar el rol de alguien, esa person
 ## Postman
 
 Importa `postman/IperIA-Auth.postman_collection.json`. Ejecuta *Iniciar sesión* (o *Iniciar sesión (Admin)*) y el token se guarda solo en `{{accessToken}}`. *Listar usuarios* guarda un `{{userId}}` para *Cambiar rol*.
+
+## Despliegue en AWS
+
+La API se empaqueta para AWS Lambda con `serverless.yml`. Pasos, variables, propuesta de PostgreSQL (RDS + RDS Proxy) y pendientes en [docs/aws-lambda.md](docs/aws-lambda.md).
